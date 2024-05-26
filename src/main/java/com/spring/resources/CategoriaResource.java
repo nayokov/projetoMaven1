@@ -30,6 +30,4 @@ public class CategoriaResource {
 			
 			return obj;
 		}
-	
-	//INSERT INTO CATEGORIA(NOME)VALUES('Informática')
 }
