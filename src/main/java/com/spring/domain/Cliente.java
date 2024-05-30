@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.domain.enums.TipoCliente;
 
 import jakarta.persistence.CollectionTable;
@@ -28,6 +29,7 @@ public class Cliente implements Serializable {
 	private String email;
 	private String cpf;
 	private Integer tipo;
+	@JsonManagedReference//cliente serializa os enderecos, evitando referencia ciclica
     @OneToMany(mappedBy="cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
     @ElementCollection
@@ -39,7 +41,6 @@ public class Cliente implements Serializable {
 	}
 
 	public Cliente(Integer id, String nome, String email, String cpf, TipoCliente tipo) {
-		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;

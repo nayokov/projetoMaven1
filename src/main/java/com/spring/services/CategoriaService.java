@@ -22,7 +22,7 @@ public class CategoriaService {
 	//}
 
 	public List<Categoria> buscar() {
-		
+		System.out.println("cheguei aqui");
 		return repository.findAll();
 	}
 	
