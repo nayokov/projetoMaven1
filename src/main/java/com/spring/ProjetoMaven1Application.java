@@ -6,9 +6,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.spring.domain.*;
+import com.spring.domain.enums.EstadoPagamento;
 import com.spring.domain.enums.TipoCliente;
 import com.spring.repositories.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 @SpringBootApplication
@@ -26,6 +29,10 @@ public class ProjetoMaven1Application implements CommandLineRunner {
     private ClienteRepository clienteRepository;
     @Autowired
     private EnderecoRepository enderecoRepository;
+    @Autowired
+    private PagamentoRepository pagamentoRepository;
+    @Autowired
+    private PedidoRepository pedidoRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(ProjetoMaven1Application.class, args);
@@ -37,7 +44,7 @@ public class ProjetoMaven1Application implements CommandLineRunner {
         setupInitialData();
     }
 
-    private void setupInitialData() {
+    private void setupInitialData() throws ParseException {
         Categoria categoria1 = new Categoria(null, "Informatica");
         Categoria categoria2 = new Categoria(null, "Escritorio");
 
@@ -86,5 +93,21 @@ public class ProjetoMaven1Application implements CommandLineRunner {
 
         clienteRepository.saveAll(Arrays.asList(cliente1, cliente2, cliente3));
         enderecoRepository.saveAll(Arrays.asList(end1, end2, end3, end4));
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Pedido pedido1 = new Pedido(null,sdf.parse("30/09/2020 00:00"), cliente1, end1);
+        Pedido pedido2 = new Pedido(null,sdf.parse("10/10/2020 00:00"), cliente1, end2);
+        Pedido pedido3 = new Pedido(null,sdf.parse("15/10/2020 00:00"), cliente3, end4);
+        
+        Pagamento pagamento1 = new PagamentoCartao(null,EstadoPagamento.QUITADO, pedido1,6);
+        pedido1.setPagamento(pagamento1);
+        Pagamento pagamento2 = new PagamentoCartao(null,EstadoPagamento.PENDENTE, pedido3,8);
+        pedido2.setPagamento(pagamento2);
+        Pagamento pagamento3 = new PagamentoBoleto(null,EstadoPagamento.PENDENTE,pedido2, sdf.parse("20/10/2020 00:00"), null);
+        pedido3.setPagamento(pagamento3);
+        
+        cliente1.getPedidos().addAll(Arrays.asList(pedido1,pedido2,pedido3));
+        pedidoRepository.saveAll(Arrays.asList(pedido1,pedido2,pedido3));
+        pagamentoRepository.saveAll(Arrays.asList(pagamento1,pagamento2,pagamento3));
+        
     }
 }
