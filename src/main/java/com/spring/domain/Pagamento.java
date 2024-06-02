@@ -3,7 +3,7 @@ package com.spring.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.domain.enums.EstadoPagamento;
 
 import jakarta.persistence.Entity;
@@ -21,7 +21,8 @@ public abstract class Pagamento implements Serializable {// pagamento abstrato p
 	@Id
 	private Integer id;
 	private Integer estadoPagto;
-	@JsonBackReference
+	//@JsonBackReference
+	@JsonIgnore // utilizando pois o managed e back reference estao dando problema
 	@OneToOne
 	@JoinColumn(name = "pedido_id")
 	@MapsId // garante que o id do pedido seja o mesmo do pagamento

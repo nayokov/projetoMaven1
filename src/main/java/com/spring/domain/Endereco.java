@@ -3,7 +3,7 @@ package com.spring.domain;
 import java.io.Serializable;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +23,8 @@ public class Endereco implements Serializable {
 	private String complemento;
 	private String bairro;
 	private String cep;
-	@JsonBackReference// impede que serialize os clientes afim de evitar referencia ciclica
+	//@JsonBackReference// impede que serialize os clientes afim de evitar referencia ciclica
+	@JsonIgnore // utilizando pois o managed e back reference estao dando problema
     @ManyToOne
     @JoinColumn(name="cliente_id")
 	private Cliente cliente;

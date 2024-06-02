@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.spring.domain.enums.TipoCliente;
 
 import jakarta.persistence.CollectionTable;
@@ -30,13 +29,14 @@ public class Cliente implements Serializable {
 	private String email;
 	private String cpf;
 	private Integer tipo;
-	@JsonManagedReference//cliente serializa os enderecos, evitando referencia ciclica
+	//@JsonManagedReference//cliente serializa os enderecos, evitando referencia ciclica
     @OneToMany(mappedBy="cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
     @ElementCollection
     @CollectionTable(name="telefone")
 	private Set<String> telefones = new HashSet<>();
-    @JsonBackReference // impede que um chame o outro infinitamente entre cliente e pedido
+    //@JsonBackReference // impede que um chame o outro infinitamente entre cliente e pedido
+    @JsonIgnore // utilizando pois o managed e back reference estao dando problema
     @OneToMany(mappedBy="cliente")
     private List<Pedido> pedidos = new ArrayList<>();
 

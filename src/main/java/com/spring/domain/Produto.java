@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -27,13 +26,14 @@ public class Produto {
 	private String nome;
 	private Double preco;
 
-	@JsonBackReference
+	// @JsonBackReference
+	@JsonIgnore // utilizando pois o managed e back reference estao dando problema
 	@ManyToMany
 	@JoinTable(name = "PRODUTO_CATEGORIA", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 
 	private List<Categoria> categorias = new ArrayList<>();
 	@JsonIgnore
-    @OneToMany(mappedBy = "id.produto")
+	@OneToMany(mappedBy = "id.produto")
 	private Set<ItemPedido> itensPedido = new HashSet<>();
 
 	public Produto(Integer id, String nome, Double preco) {
@@ -42,10 +42,11 @@ public class Produto {
 		this.nome = nome;
 		this.preco = preco;
 	}
-	@JsonIgnore// impede que serialize
-	public List<Pedido> getPedidos(){
+
+	@JsonIgnore // impede que serialize
+	public List<Pedido> getPedidos() {
 		List<Pedido> lista = new ArrayList<>();
-		for( ItemPedido item : itensPedido) {
+		for (ItemPedido item : itensPedido) {
 			lista.add(item.getPedido());
 		}
 		return lista;
