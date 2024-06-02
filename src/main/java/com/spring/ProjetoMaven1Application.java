@@ -33,6 +33,8 @@ public class ProjetoMaven1Application implements CommandLineRunner {
     private PagamentoRepository pagamentoRepository;
     @Autowired
     private PedidoRepository pedidoRepository;
+    @Autowired
+    private ItemPedidoRepository itemPedidoRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(ProjetoMaven1Application.class, args);
@@ -45,6 +47,8 @@ public class ProjetoMaven1Application implements CommandLineRunner {
     }
 
     private void setupInitialData() throws ParseException {
+    	
+    	//Produto e Categoria
         Categoria categoria1 = new Categoria(null, "Informatica");
         Categoria categoria2 = new Categoria(null, "Escritorio");
 
@@ -61,7 +65,7 @@ public class ProjetoMaven1Application implements CommandLineRunner {
 
         categoriaRepository.saveAll(Arrays.asList(categoria1, categoria2));
         produtoRepository.saveAll(Arrays.asList(produto1, produto2, produto3));
-
+        //Estado e cidade
         Estado estado1 = new Estado(null, "Minas Gerais");
         Estado estado2 = new Estado(null, "Brasília");
 
@@ -74,7 +78,7 @@ public class ProjetoMaven1Application implements CommandLineRunner {
 
         estadoRepository.saveAll(Arrays.asList(estado1, estado2));
         cidadeRepository.saveAll(Arrays.asList(cidade1, cidade2, cidade3));
-
+        //cliente e endereco
         Cliente cliente1 = new Cliente(null, "Maria", "maria@gmail.com", "45678898765", TipoCliente.PESSOAFISICA);
         cliente1.getTelefones().addAll(Arrays.asList("98898765545"));
         Cliente cliente2 = new Cliente(null, "Jose", "jo@gmail.com", "45454546789", TipoCliente.PESSOAFISICA);
@@ -93,6 +97,7 @@ public class ProjetoMaven1Application implements CommandLineRunner {
 
         clienteRepository.saveAll(Arrays.asList(cliente1, cliente2, cliente3));
         enderecoRepository.saveAll(Arrays.asList(end1, end2, end3, end4));
+        //pedido e pagamento
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Pedido pedido1 = new Pedido(null,sdf.parse("30/09/2020 00:00"), cliente1, end1);
         Pedido pedido2 = new Pedido(null,sdf.parse("10/10/2020 00:00"), cliente1, end2);
@@ -108,6 +113,18 @@ public class ProjetoMaven1Application implements CommandLineRunner {
         cliente1.getPedidos().addAll(Arrays.asList(pedido1,pedido2,pedido3));
         pedidoRepository.saveAll(Arrays.asList(pedido1,pedido2,pedido3));
         pagamentoRepository.saveAll(Arrays.asList(pagamento1,pagamento2,pagamento3));
+        //itemPedido 
+        ItemPedido itemPedido1 = new ItemPedido(pedido1, produto1,0.00,1,2000.00); 
+        ItemPedido itemPedido2 = new ItemPedido(pedido1, produto3,0.00,2,80.00); 
+        ItemPedido itemPedido3 = new ItemPedido(pedido2, produto2,100.00,1,800.00); 
         
+        pedido1.getItensPedido().addAll(Arrays.asList(itemPedido1,itemPedido2));
+        pedido2.getItensPedido().addAll(Arrays.asList(itemPedido3));
+        
+        produto1.getItensPedido().addAll(Arrays.asList(itemPedido1));
+        produto2.getItensPedido().addAll(Arrays.asList(itemPedido3));
+        produto3.getItensPedido().addAll(Arrays.asList(itemPedido2));
+        
+        itemPedidoRepository.saveAll(Arrays.asList(itemPedido1,itemPedido2,itemPedido3));
     }
 }
